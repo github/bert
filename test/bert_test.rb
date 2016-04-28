@@ -25,11 +25,17 @@ class BertTest < Test::Unit::TestCase
         assert_equal @ruby, BERT.decode(@bert)
       end
 
-      should "roundtrip string and maintain encoding" do
+      should "roundtrip string and convert to unicode" do
         str = "日本語".encode 'EUC-JP'
         round = BERT.decode(BERT.encode(str))
-        assert_equal str, round
-        assert_equal str.encoding, round.encoding
+        assert_equal str.encode("UTF-8"), round
+      end
+
+      should "invalid encoding should send as binary" do
+        str = "foo\xe2"
+        refute str.valid_encoding?
+        round = BERT.decode(BERT.encode(str))
+        assert_equal str.b, round.b
       end
 
       should "roundtrip binary string" do
