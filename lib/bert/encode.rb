@@ -11,11 +11,7 @@ module BERT
         when ::Encoding::ASCII_8BIT
           super
         else
-          if data.valid_encoding?
-            write_unicode_string data.encode("utf-8")
-          else
-            super data.b
-          end
+          write_enc_string data
         end
       end
 
@@ -25,6 +21,16 @@ module BERT
         write_1 UNICODE_STRING
         write_4 data.bytesize
         write_string data
+      end
+
+      def write_enc_string(data)
+        write_1 ENC_STRING
+        write_4 data.bytesize
+        write_string data
+        enc = data.encoding.name
+        write_1 BIN
+        write_4 enc.bytesize
+        write_string enc
       end
 
       def version_header
