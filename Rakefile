@@ -77,6 +77,7 @@ end
 
 task :default => :test
 
+begin
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
   if File.exist?('VERSION')
@@ -89,6 +90,8 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "bert #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
+end
+rescue LoadError
 end
 
 task :console do
