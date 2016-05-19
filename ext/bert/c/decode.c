@@ -34,7 +34,9 @@ static VALUE rb_cTuple;
 
 struct bert_buf {
 	const uint8_t *data;
+	const uint8_t *start;
 	const uint8_t *end;
+	VALUE rb_buf;
 };
 
 static VALUE bert_read_invalid(struct bert_buf *buf);
@@ -300,7 +302,7 @@ static VALUE bert_read_bin(struct bert_buf *buf)
 	length = bert_buf_read32(buf);
 
 	bert_buf_ensure(buf, length);
-	rb_bin = rb_str_new((char *)buf->data, length);
+	rb_bin = rb_str_substr(buf->rb_buf, buf->data - buf->start, length);
 	buf->data += length;
 
 	return rb_bin;
@@ -512,6 +514,8 @@ static VALUE rb_bert_decode(VALUE klass, VALUE rb_string)
 
 	Check_Type(rb_string, T_STRING);
 	buf.data = (uint8_t *)RSTRING_PTR(rb_string);
+	buf.start = buf.data;
+	buf.rb_buf = rb_string;
 	buf.end = buf.data + RSTRING_LEN(rb_string);
 
 	bert_buf_ensure(&buf, 1);
