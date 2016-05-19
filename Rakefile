@@ -42,7 +42,7 @@ task :clean do
   end
 end
 
-task :test => :check_dependencies do
+task :test do
   require 'fileutils'
 
   puts "\nCleaning extension build files and running all specs in native ruby mode..."
@@ -77,7 +77,7 @@ end
 
 task :default => :test
 
-require 'rake/rdoctask'
+require 'rdoc/task'
 Rake::RDocTask.new do |rdoc|
   if File.exist?('VERSION')
     version = File.read('VERSION')
