@@ -3,6 +3,10 @@ module BERT
     Encoder.encode(ruby)
   end
 
+  def self.encode_to_buffer(ruby)
+    Encoder.encode_to_buffer(ruby)
+  end
+
   def self.decode(bert)
     Decoder.decode(bert)
   end

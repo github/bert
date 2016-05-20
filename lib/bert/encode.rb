@@ -49,17 +49,44 @@ module BERT
       self.out = out
     end
 
+    class Buffer
+      def initialize
+        @buf = []
+      end
+
+      def write(str)
+        @buf << str
+      end
+
+      def write_to(io)
+        @buf.each { |x| io.write x }
+      end
+
+      def bytesize
+        @buf.map(&:bytesize).inject :+
+      end
+    end
+
+    def self.encode_to_buffer(data)
+      io = Buffer.new
+      encode_data data, io
+      io
+    end
+
     def self.encode(data)
+      buf = encode_to_buffer data
       io = StringIO.new
       io.set_encoding('binary') if io.respond_to?(:set_encoding)
+      buf.write_to io
+      io.string
+    end
 
+    def self.encode_data(data, io)
       if version == :v2
         Encode::V2.new(io).write_any(data)
       else
         new(io).write_any(data)
       end
-
-      io.string
     end
 
     def write_any obj
