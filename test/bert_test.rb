@@ -44,6 +44,14 @@ class BertTest < Test::Unit::TestCase
         assert_equal @bert, BERT.encode(@ruby)
       end
 
+      should "encode with buffer" do
+        buf = BERT.encode_to_buffer(@ruby)
+        io = StringIO.new
+        io.set_encoding 'binary'
+        buf.write_to io
+        assert_equal @bert, io.string
+      end
+
       should "ebin" do
         assert_equal @ebin, BERT.ebin(@bert)
       end
