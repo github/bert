@@ -1,30 +1,6 @@
 require 'rubygems'
 require 'rake'
 
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "bert"
-    gem.summary = %Q{BERT Serializiation for Ruby}
-    gem.description = %Q{BERT Serializiation for Ruby}
-    gem.email = "tom@mojombo.com"
-    gem.homepage = "http://github.com/mojombo/bert"
-    gem.authors = ["Tom Preston-Werner"]
-    gem.add_development_dependency("thoughtbot-shoulda")
-    if ENV["JAVA"]
-      gem.extensions = nil
-      gem.platform = 'java'
-    else
-      gem.require_paths = ["lib", "ext"]
-      gem.files.include("ext")
-      gem.extensions << 'ext/bert/c/extconf.rb'
-    end
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
-  end
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
-end
-
 require 'rake/testtask'
 Rake::TestTask.new(:runtests) do |test|
   test.libs << 'lib' << 'test'
