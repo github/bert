@@ -9,6 +9,11 @@ module BERT
       Encode.encode(complex_ruby)
     end
 
+    def self.encode_to_buffer(ruby)
+      complex_ruby = convert(ruby)
+      Encode.encode_to_buffer(complex_ruby)
+    end
+
     # Convert complex Ruby form in simple Ruby form.
     #   +item+ is the Ruby object to convert
     #
