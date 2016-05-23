@@ -10,8 +10,7 @@ ITER = 1_000
 def setup
   tiny = t[:ok, :awesome]
   small = t[:ok, :answers, [42] * 42]
-  #large = ["abc" * 1000] * 100
-  large = "a" * (1024 * 1024 * 64)
+  large = ["abc" * 1000] * 100
   complex = [42, {:foo => 'bac' * 100}, t[(1..100).to_a]] * 10
 
   $tiny_encoded_bert = BERT.encode(tiny)
