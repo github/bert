@@ -37,7 +37,6 @@ end
 
 Benchmark.bm(13) do |bench|
   pid = fork do
-    Dir.chdir(File.join(File.dirname(__FILE__), *%w[.. ext bert c])) { `make` }
     require 'bert'
     raise "Could not load C extension" unless BERT::Decode.impl == 'C'
     setup

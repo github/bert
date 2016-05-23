@@ -19,8 +19,10 @@ Gem::Specification.new do |s|
     s.files = `git ls-files`.split("\n")
     s.require_paths = ["lib", "ext"]
 
+    s.extensions = ["ext/bert/c/extconf.rb"]
+
     s.add_development_dependency "thoughtbot-shoulda"
     s.add_development_dependency "git"
     s.add_development_dependency "rake"
-
+    s.add_development_dependency "rake-compiler", "~> 0.9.0"
 end
