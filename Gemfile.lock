@@ -8,6 +8,8 @@ GEM
   specs:
     git (1.3.0)
     rake (11.1.2)
+    rake-compiler (0.9.9)
+      rake
     thoughtbot-shoulda (2.11.1)
 
 PLATFORMS
@@ -17,6 +19,7 @@ DEPENDENCIES
   bert!
   git
   rake
+  rake-compiler (~> 0.9.0)
   thoughtbot-shoulda
 
 BUNDLED WITH

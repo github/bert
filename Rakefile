@@ -1,6 +1,16 @@
 require 'rubygems'
 require 'rake'
 
+require 'rake/extensiontask'
+
+gemspec = Gem::Specification::load(File.expand_path('../bert.gemspec', __FILE__))
+
+Rake::ExtensionTask.new(gemspec) do |ext|
+  ext.name = 'decode'
+  ext.ext_dir = 'ext/bert/c'
+  ext.lib_dir = 'ext/bert/c'
+end
+
 require 'rake/testtask'
 Rake::TestTask.new(:runtests) do |test|
   test.libs << 'lib' << 'test'
@@ -8,34 +18,13 @@ Rake::TestTask.new(:runtests) do |test|
   test.verbose = true
 end
 
-task :make do
-  Dir.chdir('ext/bert/c') { `ruby extconf.rb`; `make` }
-end
+task :default => [:compile, :test]
 
-task :clean do
-  ['rm -f ext/bert/c/*.bundle', 'rm -f ext/bert/c/*.o'].each do |cmd|
-    `#{cmd}` && puts(cmd)
-  end
-end
-
-task :test do
-  require 'fileutils'
-
-  puts "\nCleaning extension build files and running all specs in native ruby mode..."
-  ['rm -f ext/bert/c/*.bundle', 'rm -f ext/bert/c/*.o'].each do |cmd|
-    `#{cmd}` && puts(cmd)
-  end
-  pid = fork do
-    exec 'rake runtests'
-  end
-  Process.waitpid(pid)
-
-  puts "\nRunning `make` to build extensions and rerunning decoder specs..."
-  Dir.chdir('ext/bert/c') { `ruby extconf.rb`; `make` }
-  pid = fork do
-    exec 'rake runtests'
-  end
-  Process.waitpid(pid)
+Rake::TestTask.new do |t|
+  t.libs << 'lib' << 'test'
+  t.pattern = 'test/**/*_test.rb'
+  t.verbose = false
+  t.warning = true
 end
 
 begin
