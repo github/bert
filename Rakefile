@@ -1,28 +1,14 @@
 require 'rubygems'
 require 'rake'
 
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "bert"
-    gem.summary = %Q{BERT Serializiation for Ruby}
-    gem.description = %Q{BERT Serializiation for Ruby}
-    gem.email = "tom@mojombo.com"
-    gem.homepage = "http://github.com/mojombo/bert"
-    gem.authors = ["Tom Preston-Werner"]
-    gem.add_development_dependency("thoughtbot-shoulda")
-    if ENV["JAVA"]
-      gem.extensions = nil
-      gem.platform = 'java'
-    else
-      gem.require_paths = ["lib", "ext"]
-      gem.files.include("ext")
-      gem.extensions << 'ext/bert/c/extconf.rb'
-    end
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
-  end
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+require 'rake/extensiontask'
+
+gemspec = Gem::Specification::load(File.expand_path('../bert.gemspec', __FILE__))
+
+Rake::ExtensionTask.new(gemspec) do |ext|
+  ext.name = 'decode'
+  ext.ext_dir = 'ext/bert/c'
+  ext.lib_dir = 'ext/bert/c'
 end
 
 require 'rake/testtask'
@@ -32,34 +18,13 @@ Rake::TestTask.new(:runtests) do |test|
   test.verbose = true
 end
 
-task :make do
-  Dir.chdir('ext/bert/c') { `ruby extconf.rb`; `make` }
-end
+task :default => [:compile, :test]
 
-task :clean do
-  ['rm -f ext/bert/c/*.bundle', 'rm -f ext/bert/c/*.o'].each do |cmd|
-    `#{cmd}` && puts(cmd)
-  end
-end
-
-task :test do
-  require 'fileutils'
-
-  puts "\nCleaning extension build files and running all specs in native ruby mode..."
-  ['rm -f ext/bert/c/*.bundle', 'rm -f ext/bert/c/*.o'].each do |cmd|
-    `#{cmd}` && puts(cmd)
-  end
-  pid = fork do
-    exec 'rake runtests'
-  end
-  Process.waitpid(pid)
-
-  puts "\nRunning `make` to build extensions and rerunning decoder specs..."
-  Dir.chdir('ext/bert/c') { `ruby extconf.rb`; `make` }
-  pid = fork do
-    exec 'rake runtests'
-  end
-  Process.waitpid(pid)
+Rake::TestTask.new do |t|
+  t.libs << 'lib' << 'test'
+  t.pattern = 'test/**/*_test.rb'
+  t.verbose = false
+  t.warning = true
 end
 
 begin
