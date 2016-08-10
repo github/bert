@@ -97,18 +97,18 @@ module BERT
     def write_any_raw obj
       case obj
         when Symbol then write_symbol(obj)
+        when String then write_binary(obj)
         when Fixnum, Bignum then write_fixnum(obj)
         when Float then write_float(obj)
         when Tuple then write_tuple(obj)
         when Array then write_list(obj)
-        when String then write_binary(obj)
         else
           fail(obj)
       end
     end
 
     def write_1(byte)
-      out.write([byte].pack("C"))
+      out.write(byte.chr)
     end
 
     def write_2(short)
