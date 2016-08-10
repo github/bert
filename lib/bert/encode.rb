@@ -1,3 +1,5 @@
+require 'writev'
+
 module BERT
   class Encode
     include Types
@@ -59,7 +61,13 @@ module BERT
       end
 
       def write_to(io)
-        @buf.each { |x| io.write x }
+        if io.respond_to?(:writev)
+          @buf.each_slice IO::IOV_MAX do |elems|
+            io.writev elems
+          end
+        else
+          @buf.each { |x| io.write x }
+        end
       end
 
       def bytesize
