@@ -11,7 +11,7 @@ GEM
     rake-compiler (0.9.9)
       rake
     thoughtbot-shoulda (2.11.1)
-    yajl (0.3.4)
+    yajl-ruby (1.2.1)
 
 PLATFORMS
   ruby
@@ -22,7 +22,7 @@ DEPENDENCIES
   rake
   rake-compiler (~> 0.9.0)
   thoughtbot-shoulda
-  yajl
+  yajl-ruby
 
 BUNDLED WITH
    1.12.5
