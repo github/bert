@@ -62,6 +62,10 @@ module BERT
         @buf.each { |x| io.write x }
       end
 
+      def to_s
+        @buf.join("")
+      end
+
       def bytesize
         @buf.map(&:bytesize).inject :+
       end
@@ -74,11 +78,7 @@ module BERT
     end
 
     def self.encode(data)
-      buf = encode_to_buffer data
-      io = StringIO.new
-      io.set_encoding('binary') if io.respond_to?(:set_encoding)
-      buf.write_to io
-      io.string
+      encode_to_buffer(data).to_s
     end
 
     def self.encode_data(data, io)
