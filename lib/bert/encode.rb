@@ -98,7 +98,7 @@ module BERT
       case obj
         when Symbol then write_symbol(obj)
         when String then write_binary(obj)
-        when Fixnum, Bignum then write_fixnum(obj)
+        when Integer then write_integer(obj)
         when Float then write_float(obj)
         when Tuple then write_tuple(obj)
         when Array then write_list(obj)
@@ -135,7 +135,7 @@ module BERT
       write_string data
     end
 
-    def write_fixnum(num)
+    def write_integer(num)
       if num >= 0 && num < 256
         write_1 SMALL_INT
         write_1 num
