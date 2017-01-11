@@ -55,7 +55,7 @@ module BERT
       end
 
       def write(str)
-        @buf << str
+        @buf << str.b
       end
 
       def write_to(io)
