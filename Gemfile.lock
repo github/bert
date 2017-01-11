@@ -1,15 +1,18 @@
 PATH
   remote: .
   specs:
-    bert (1.1.10)
+    bert (1.1.9)
 
 GEM
   remote: https://rubygems.org/
   specs:
     git (1.3.0)
+    power_assert (0.4.1)
     rake (11.1.2)
     rake-compiler (0.9.9)
       rake
+    test-unit (3.2.3)
+      power_assert
     thoughtbot-shoulda (2.11.1)
 
 PLATFORMS
@@ -20,7 +23,8 @@ DEPENDENCIES
   git
   rake
   rake-compiler (~> 0.9.0)
+  test-unit
   thoughtbot-shoulda
 
 BUNDLED WITH
-   1.12.4
+   1.13.6
