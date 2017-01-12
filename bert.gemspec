@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency "thoughtbot-shoulda"
     s.add_development_dependency "git"
     s.add_development_dependency "rake"
+    s.add_development_dependency "writev"
     s.add_development_dependency "rake-compiler", "~> 0.9.0"
     s.add_development_dependency "yajl-ruby"
     s.add_development_dependency "test-unit"
