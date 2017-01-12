@@ -82,7 +82,6 @@ class EncoderTest < Test::Unit::TestCase
     end
 
     should 'handle utf8 strings' do
-      str = "été".encode 'UTF-8'
       bert = [131, 109, 0, 0, 0, 5, 195, 169, 116, 195, 169].pack('C*')
       assert_equal bert, BERT::Encoder.encode("été")
     end
@@ -111,7 +110,6 @@ class EncoderTest < Test::Unit::TestCase
       end
 
       should 'handle utf8 strings' do
-        str = "été".encode 'UTF-8'
         bert = [132, 113, 0, 0, 0, 5, 195, 169, 116, 195, 169].pack('C*')
         assert_equal bert, BERT::Encoder.encode("été")
       end

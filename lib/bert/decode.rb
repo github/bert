@@ -154,7 +154,7 @@ module BERT
     def read_float
       fail("Invalid Type, not a float") unless read_1 == FLOAT
       string_value = read_string(31)
-      result = string_value.to_f
+      string_value.to_f
     end
 
     def read_small_tuple
