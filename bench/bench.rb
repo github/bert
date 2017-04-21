@@ -16,11 +16,14 @@ complex = [42, {:foo => 'bac' * 100}, t[(1..100).to_a]] * 10
 long_array = {:a => ["a"]*1000}
 
 Benchmark.bm(30) do |bench|
-  bench.report("BERT tiny") {ITER.times {BERT.decode(BERT.encode(tiny))}}
-  bench.report("BERT small") {ITER.times {BERT.decode(BERT.encode(small))}}
-  bench.report("BERT large") {ITER.times {BERT.decode(BERT.encode(large))}}
-  bench.report("BERT complex") {ITER.times {BERT.decode(BERT.encode(complex))}}
-  bench.report("BERT long array") {ITER.times {BERT.decode(BERT.encode(long_array))}}
+  [:v1, :v2, :v3].each do |v|
+    BERT::Encode.version = v
+    bench.report("BERT #{v} tiny") {ITER.times {BERT.decode(BERT.encode(tiny))}}
+    bench.report("BERT #{v} small") {ITER.times {BERT.decode(BERT.encode(small))}}
+    bench.report("BERT #{v} large") {ITER.times {BERT.decode(BERT.encode(large))}}
+    bench.report("BERT #{v} complex") {ITER.times {BERT.decode(BERT.encode(complex))}}
+    bench.report("BERT #{v} long array") {ITER.times {BERT.decode(BERT.encode(long_array))}}
+  end
 
   bench.report("JSON tiny") {ITER.times {JSON.load(JSON.dump(tiny))}}
   bench.report("JSON small") {ITER.times {JSON.load(JSON.dump(small))}}
