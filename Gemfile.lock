@@ -7,6 +7,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     git (1.3.0)
+    msgpack (1.1.0)
     power_assert (0.4.1)
     rake (12.0.0)
     rake-compiler (0.9.9)
@@ -22,11 +23,9 @@ PLATFORMS
 DEPENDENCIES
   bert!
   git
+  msgpack
   rake
   rake-compiler (~> 0.9.0)
   test-unit
   thoughtbot-shoulda
   yajl-ruby
-
-BUNDLED WITH
-   1.13.7
