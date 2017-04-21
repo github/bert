@@ -17,6 +17,7 @@ module BERT
     FUN = 117
     MAGIC = 131
     VERSION_2 = 132
+    VERSION_3 = 133
     MAX_INT = (1 << 27) -1
     MIN_INT = -(1 << 27)
   end

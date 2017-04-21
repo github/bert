@@ -1,3 +1,5 @@
+require "msgpack"
+
 module BERT
   class Encode
     include Types
@@ -35,6 +37,19 @@ module BERT
 
       def version_header
         VERSION_2
+      end
+    end
+
+    class V3
+      def initialize(out)
+        @out = out
+      end
+
+      attr_reader :out
+
+      def write_any(obj)
+        out.write(BERT::Encode::VERSION_3.chr)
+        out.write(MessagePack.pack(obj))
       end
     end
 
@@ -82,7 +97,9 @@ module BERT
     end
 
     def self.encode_data(data, io)
-      if version == :v2
+      if version == :v3
+        Encode::V3.new(io).write_any(data)
+      elsif version == :v2
         Encode::V2.new(io).write_any(data)
       else
         new(io).write_any(data)

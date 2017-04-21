@@ -21,9 +21,11 @@ Gem::Specification.new do |s|
 
     s.extensions = ["ext/bert/c/extconf.rb"]
 
+    s.add_dependency "msgpack"
+
+    s.add_development_dependency "byebug"
     s.add_development_dependency "thoughtbot-shoulda"
     s.add_development_dependency "git"
-    s.add_development_dependency "msgpack"
     s.add_development_dependency "rake"
     s.add_development_dependency "rake-compiler", "~> 0.9.0"
     s.add_development_dependency "yajl-ruby"
