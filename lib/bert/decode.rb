@@ -12,10 +12,22 @@ module BERT
       io.set_encoding('binary') if io.respond_to?(:set_encoding)
       header = io.getbyte
       case header
+      when VERSION_3
+        V3.new(io).read_any
       when MAGIC, VERSION_2
         new(io).read_any
       else
         fail("Bad Magic")
+      end
+    end
+
+    class V3
+      def initialize(ins)
+        @unpacker = MessagePack::Unpacker.new(ins)
+      end
+
+      def read_any
+        @unpacker.read
       end
     end
 
