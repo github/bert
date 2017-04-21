@@ -1,3 +1,5 @@
+require "bert/msgpack"
+
 module BERT
   class Decode
     attr_accessor :in
@@ -23,11 +25,11 @@ module BERT
 
     class V3
       def initialize(ins)
-        @unpacker = MessagePack::Unpacker.new(ins)
+        @ins = ins
       end
 
       def read_any
-        @unpacker.read
+        BERT.msgpack.unpacker(@ins).read
       end
     end
 

@@ -1,4 +1,4 @@
-require "msgpack"
+require "bert/msgpack"
 
 module BERT
   class Encode
@@ -48,8 +48,16 @@ module BERT
       attr_reader :out
 
       def write_any(obj)
-        out.write(BERT::Encode::VERSION_3.chr)
-        out.write(MessagePack.pack(obj))
+        out.write(version_header.chr)
+        packer = BERT.msgpack.packer(out)
+        packer.write(obj)
+        packer.flush
+      end
+
+      private
+
+      def version_header
+        BERT::Encode::VERSION_3
       end
     end
 
