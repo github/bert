@@ -3,3 +3,5 @@
 source "https://rubygems.org"
 
 gemspec
+
+gem "msgpack", :git => "https://github.com/spraints/msgpack-ruby", :ref => "custom-string"
