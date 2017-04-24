@@ -23,7 +23,6 @@ Gem::Specification.new do |s|
 
     s.add_dependency "msgpack"
 
-    s.add_development_dependency "byebug"
     s.add_development_dependency "thoughtbot-shoulda"
     s.add_development_dependency "git"
     s.add_development_dependency "rake"
