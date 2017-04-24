@@ -16,7 +16,7 @@ complex = [42, {:foo => 'bac' * 100}, t[(1..100).to_a]] * 10
 long_array = {:a => ["a"]*1000}
 
 Benchmark.bm(30) do |bench|
-  [:v1, :v2, :v3].each do |v|
+  [:v1, :v2, :v3, :v4].each do |v|
     BERT::Encode.version = v
     bench.report("BERT #{v} tiny") {ITER.times {BERT.decode(BERT.encode(tiny))}}
     bench.report("BERT #{v} small") {ITER.times {BERT.decode(BERT.encode(small))}}

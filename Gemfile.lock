@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/spraints/mochilo
+  revision: 458fcb528b704bae7bff074d9aa27ee2ccb9449d
+  ref: custom-type-registry
+  specs:
+    mochilo (2.0)
+
+GIT
   remote: https://github.com/spraints/msgpack-ruby
   revision: 8a2f5bf2e83038fa3c5366d63f93d5c6275c3a65
   ref: custom-string
@@ -32,6 +39,7 @@ DEPENDENCIES
   bert!
   byebug
   git
+  mochilo!
   msgpack!
   rake
   rake-compiler (~> 0.9.0)

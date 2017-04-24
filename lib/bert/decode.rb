@@ -1,4 +1,5 @@
 require "bert/msgpack"
+require "bert/mochilo"
 
 module BERT
   class Decode
@@ -14,6 +15,8 @@ module BERT
       io.set_encoding('binary') if io.respond_to?(:set_encoding)
       header = io.getbyte
       case header
+      when VERSION_4
+        V4.new(io).read_any
       when VERSION_3
         V3.new(io).read_any
       when MAGIC, VERSION_2
@@ -30,6 +33,16 @@ module BERT
 
       def read_any
         BERT.msgpack.unpacker(@ins).read
+      end
+    end
+
+    class V4
+      def initialize(ins)
+        @ins = ins
+      end
+
+      def read_any
+        BERT.mochilo.unpack(@ins.read)
       end
     end
 
