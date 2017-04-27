@@ -3,7 +3,6 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'rubygems'
 require 'bert'
 require 'json'
-require 'msgpack'
 require 'yajl'
 require 'benchmark'
 
@@ -16,7 +15,7 @@ complex = [42, {:foo => 'bac' * 100}, t[(1..100).to_a]] * 10
 long_array = {:a => ["a"]*1000}
 
 Benchmark.bm(30) do |bench|
-  [:v1, :v2, :v3, :v4].each do |v|
+  [:v1, :v2, :v3].each do |v|
     BERT::Encode.version = v
     bench.report("BERT #{v} tiny") {ITER.times {BERT.decode(BERT.encode(tiny))}}
     bench.report("BERT #{v} small") {ITER.times {BERT.decode(BERT.encode(small))}}
@@ -42,10 +41,4 @@ Benchmark.bm(30) do |bench|
   bench.report("Ruby large") {ITER.times {Marshal.load(Marshal.dump(large))}}
   bench.report("Ruby complex") {ITER.times {Marshal.load(Marshal.dump(complex))}}
   bench.report("Ruby long array") {ITER.times {Marshal.load(Marshal.dump(long_array))}}
-
-  bench.report("Msgpack tiny") {ITER.times {MessagePack.unpack(MessagePack.pack(tiny))}}
-  bench.report("Msgpack small") {ITER.times {MessagePack.unpack(MessagePack.pack(small))}}
-  bench.report("Msgpack large") {ITER.times {MessagePack.unpack(MessagePack.pack(large))}}
-  bench.report("Msgpack complex") {ITER.times {MessagePack.unpack(MessagePack.pack(complex))}}
-  bench.report("Msgpack long array") {ITER.times {MessagePack.unpack(MessagePack.pack(long_array))}}
 end

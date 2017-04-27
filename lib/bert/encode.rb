@@ -1,4 +1,3 @@
-require "bert/msgpack"
 require "bert/mochilo"
 
 module BERT
@@ -50,34 +49,13 @@ module BERT
 
       def write_any(obj)
         out.write(version_header.chr)
-        packer = BERT.msgpack.packer(out)
-        packer.write(obj)
-        packer.flush
-      end
-
-      private
-
-      def version_header
-        BERT::Encode::VERSION_3
-      end
-    end
-
-    class V4
-      def initialize(out)
-        @out = out
-      end
-
-      attr_reader :out
-
-      def write_any(obj)
-        out.write(version_header.chr)
         out.write(BERT.mochilo.pack(obj))
       end
 
       private
 
       def version_header
-        BERT::Encode::VERSION_4
+        BERT::Encode::VERSION_3
       end
     end
 
@@ -125,9 +103,7 @@ module BERT
     end
 
     def self.encode_data(data, io)
-      if version == :v4
-        Encode::V4.new(io).write_any(data)
-      elsif version == :v3
+      if version == :v3
         Encode::V3.new(io).write_any(data)
       elsif version == :v2
         Encode::V2.new(io).write_any(data)
