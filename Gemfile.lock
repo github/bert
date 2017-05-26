@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/spraints/mochilo
-  revision: 458fcb528b704bae7bff074d9aa27ee2ccb9449d
-  ref: custom-type-registry
+  revision: 1be8e82a20a359656628439511606b7b89afa228
+  ref: symbols-and-regexps-and-time-oh-my
   specs:
     mochilo (2.0)
 

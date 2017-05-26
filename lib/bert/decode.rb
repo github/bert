@@ -1,4 +1,4 @@
-require "bert/mochilo"
+require "mochilo"
 
 module BERT
   class Decode
@@ -29,7 +29,7 @@ module BERT
       end
 
       def read_any
-        BERT.mochilo.unpack(@ins.read)
+        Mochilo.unpack(@ins.read)
       end
     end
 

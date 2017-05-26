@@ -1,4 +1,4 @@
-require "bert/mochilo"
+require "mochilo"
 
 module BERT
   class Encode
@@ -49,7 +49,7 @@ module BERT
 
       def write_any(obj)
         out.write(version_header.chr)
-        out.write(BERT.mochilo.pack(obj))
+        out.write(Mochilo.pack(obj))
       end
 
       private
