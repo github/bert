@@ -24,6 +24,7 @@
 /* Protocol version constants. */
 #define ERL_VERSION       131
 #define ERL_VERSION2      132
+#define MSGPACK_VERSION   133
 
 #define BERT_VALID_TYPE(t) ((t) >= ERL_SMALL_INT && (t) <= ERLEXT_UNICODE_STRING)
 #define BERT_TYPE_OFFSET (ERL_SMALL_INT)
@@ -31,6 +32,8 @@
 static VALUE rb_mBERT;
 static VALUE rb_cDecode;
 static VALUE rb_cTuple;
+static VALUE rb_cMochilo;
+static VALUE id_unpack;
 
 struct bert_buf {
 	const uint8_t *data;
@@ -511,18 +514,25 @@ static VALUE rb_bert_decode(VALUE klass, VALUE rb_string)
 {
 	struct bert_buf buf;
 	uint8_t proto_version;
+	const char *str;
+	size_t size;
 
 	Check_Type(rb_string, T_STRING);
-	buf.data = (uint8_t *)RSTRING_PTR(rb_string);
+	str = RSTRING_PTR(rb_string);
+	size = RSTRING_LEN(rb_string);
+
+	buf.data = (uint8_t *)str;
 	buf.start = buf.data;
 	buf.rb_buf = rb_string;
-	buf.end = buf.data + RSTRING_LEN(rb_string);
+	buf.end = buf.data + size;
 
 	bert_buf_ensure(&buf, 1);
 
 	proto_version = bert_buf_read8(&buf);
 	if (proto_version == ERL_VERSION || proto_version == ERL_VERSION2) {
 	    return bert_read(&buf);
+        } else if (proto_version == MSGPACK_VERSION) {
+            return rb_funcall(rb_cMochilo, id_unpack, 1, rb_str_new(str + 1, size - 1));
 	} else {
 	    rb_raise(rb_eTypeError, "Invalid magic value for BERT string");
 	}
@@ -537,6 +547,10 @@ void Init_decode()
 {
 	rb_mBERT = rb_const_get(rb_cObject, rb_intern("BERT"));
 	rb_cTuple = rb_const_get(rb_mBERT, rb_intern("Tuple"));
+
+	rb_require("mochilo");
+	rb_cMochilo = rb_const_get(rb_cObject, rb_intern("Mochilo"));
+	id_unpack = rb_intern("unpack");
 
 	rb_cDecode = rb_define_class_under(rb_mBERT, "Decode", rb_cObject);
 	rb_define_singleton_method(rb_cDecode, "decode", rb_bert_decode, 1);
