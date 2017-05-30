@@ -49,13 +49,32 @@ module BERT
 
       def write_any(obj)
         out.write(version_header.chr)
-        out.write(Mochilo.pack(obj))
+        out.write(Mochilo.pack_unsafe(obj))
       end
 
       private
 
       def version_header
         BERT::Encode::VERSION_3
+      end
+    end
+
+    class V4
+      def initialize(out)
+        @out = out
+      end
+
+      attr_reader :out
+
+      def write_any(obj)
+        out.write(version_header.chr)
+        out.write(Mochilo.pack(obj))
+      end
+
+      private
+
+      def version_header
+        BERT::Encode::VERSION_4
       end
     end
 
@@ -103,13 +122,19 @@ module BERT
     end
 
     def self.encode_data(data, io)
-      if version == :v3
-        Encode::V3.new(io).write_any(data)
-      elsif version == :v2
-        Encode::V2.new(io).write_any(data)
-      else
-        new(io).write_any(data)
-      end
+      fail "Cannot encode with requested version (#{version})" unless BERT.supports?(version)
+      encoder =
+        case version
+        when :v4
+          V4.new(io)
+        when :v3
+          V3.new(io)
+        when :v2
+          V2.new(io)
+        else
+          new(io)
+        end
+      encoder.write_any(data)
     end
 
     def write_any obj

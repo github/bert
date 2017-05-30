@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/spraints/mochilo
-  revision: 1bf415c4e81edbe72c0aab5404598dec9bef41b9
+  revision: 73fcaa99f01c42ad6017b201b0aeeca5f25a7a53
   ref: symbols-and-regexps-and-time-oh-my
   specs:
     mochilo (2.0)

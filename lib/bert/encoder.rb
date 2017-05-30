@@ -19,7 +19,7 @@ module BERT
     #
     # Returns the converted Ruby object
     def self.convert(item)
-      return item if Encode.version == :v3
+      return item if Encode.version == :v3 || Encode.version == :v4
       case item
         when Hash
           pairs = []

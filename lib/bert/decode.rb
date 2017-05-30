@@ -14,22 +14,16 @@ module BERT
       io.set_encoding('binary') if io.respond_to?(:set_encoding)
       header = io.getbyte
       case header
+      when VERSION_4
+        raise "v4 stream cannot be decoded" unless BERT.supports?(:v4)
+        Mochilo.unpack(io.read)
       when VERSION_3
-        V3.new(io).read_any
+        raise "v3 stream cannot be decoded" unless BERT.supports?(:v3)
+        Mochilo.unpack_unsafe(io.read)
       when MAGIC, VERSION_2
         new(io).read_any
       else
         fail("Bad Magic")
-      end
-    end
-
-    class V3
-      def initialize(ins)
-        @ins = ins
-      end
-
-      def read_any
-        Mochilo.unpack(@ins.read)
       end
     end
 

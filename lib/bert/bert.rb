@@ -1,4 +1,19 @@
+require "mochilo/version"
+
 module BERT
+  def self.supports?(v)
+    case v
+    when :v1, :v2
+      true
+    when :v3
+      Mochilo.respond_to?(:pack_unsafe)
+    when :v4
+      !Mochilo.respond_to?(:pack_unsafe)
+    else
+      false
+    end
+  end
+
   def self.encode(ruby)
     Encoder.encode(ruby)
   end
