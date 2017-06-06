@@ -4,4 +4,4 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "mochilo", :git => "https://github.com/spraints/mochilo", :ref => "v1-time-regexp"
+gem "mochilo", :git => "https://github.com/brianmario/mochilo", :ref => "v1-release"
