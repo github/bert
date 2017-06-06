@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
 
     s.extensions = ["ext/bert/c/extconf.rb"]
 
-    s.add_dependency "mochilo"
+    s.add_dependency "mochilo", ">= 1.3", "!= 2.0"
 
     s.add_development_dependency "thoughtbot-shoulda"
     s.add_development_dependency "git"

@@ -1,15 +1,15 @@
 GIT
-  remote: https://github.com/spraints/mochilo
-  revision: 73fcaa99f01c42ad6017b201b0aeeca5f25a7a53
-  ref: symbols-and-regexps-and-time-oh-my
+  remote: https://github.com/brianmario/mochilo
+  revision: 8c75eea34bdde298733432b988c8d7f07f56e311
+  ref: master
   specs:
-    mochilo (2.0)
+    mochilo (2.1)
 
 PATH
   remote: .
   specs:
     bert (1.1.10)
-      mochilo
+      mochilo (>= 1.3, != 2.0)
 
 GEM
   remote: https://rubygems.org/

@@ -4,4 +4,4 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "mochilo", :git => "https://github.com/spraints/mochilo", :ref => "symbols-and-regexps-and-time-oh-my"
+gem "mochilo", :git => "https://github.com/brianmario/mochilo", :ref => "master"
