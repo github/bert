@@ -4,4 +4,4 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "mochilo", :git => "https://github.com/brianmario/mochilo", :ref => "master"
+gem "mochilo", :git => "https://github.com/brianmario/mochilo", :ref => "v1-release"

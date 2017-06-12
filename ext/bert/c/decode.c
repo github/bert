@@ -24,6 +24,8 @@
 /* Protocol version constants. */
 #define ERL_VERSION       131
 #define ERL_VERSION2      132
+#define MOCHILO_VERSION1  133
+#define MOCHILO_VERSION2  134
 
 #define BERT_VALID_TYPE(t) ((t) >= ERL_SMALL_INT && (t) <= ERLEXT_UNICODE_STRING)
 #define BERT_TYPE_OFFSET (ERL_SMALL_INT)
@@ -31,6 +33,9 @@
 static VALUE rb_mBERT;
 static VALUE rb_cDecode;
 static VALUE rb_cTuple;
+static VALUE rb_cMochilo;
+static VALUE id_unpack_unsafe;
+static VALUE id_unpack;
 
 struct bert_buf {
 	const uint8_t *data;
@@ -507,24 +512,46 @@ static VALUE bert_read_invalid(struct bert_buf *buf)
 	return Qnil;
 }
 
+static int supports(const char *version)
+{
+	return RTEST(rb_funcall(rb_mBERT, rb_intern("supports?"), 1, ID2SYM(rb_intern(version))));
+}
+
 static VALUE rb_bert_decode(VALUE klass, VALUE rb_string)
 {
 	struct bert_buf buf;
 	uint8_t proto_version;
+	const char *str;
+	size_t size;
 
 	Check_Type(rb_string, T_STRING);
-	buf.data = (uint8_t *)RSTRING_PTR(rb_string);
+	str = RSTRING_PTR(rb_string);
+	size = RSTRING_LEN(rb_string);
+
+	buf.data = (uint8_t *)str;
 	buf.start = buf.data;
 	buf.rb_buf = rb_string;
-	buf.end = buf.data + RSTRING_LEN(rb_string);
+	buf.end = buf.data + size;
 
 	bert_buf_ensure(&buf, 1);
 
 	proto_version = bert_buf_read8(&buf);
 	if (proto_version == ERL_VERSION || proto_version == ERL_VERSION2) {
 	    return bert_read(&buf);
+        } else if (proto_version == MOCHILO_VERSION1) {
+		if (supports("v3")) {
+			return rb_funcall(rb_cMochilo, id_unpack_unsafe, 1, rb_str_new(str + 1, size - 1));
+		} else {
+			rb_raise(rb_eTypeError, "v3 stream cannot be decoded");
+		}
+        } else if (proto_version == MOCHILO_VERSION2) {
+		if (supports("v4")) {
+			return rb_funcall(rb_cMochilo, id_unpack, 1, rb_str_new(str + 1, size - 1));
+		} else {
+			rb_raise(rb_eTypeError, "v4 stream cannot be decoded");
+		}
 	} else {
-	    rb_raise(rb_eTypeError, "Invalid magic value for BERT string");
+	    rb_raise(rb_eTypeError, "Invalid magic value (%d) for BERT string", proto_version);
 	}
 }
 
@@ -537,6 +564,11 @@ void Init_decode()
 {
 	rb_mBERT = rb_const_get(rb_cObject, rb_intern("BERT"));
 	rb_cTuple = rb_const_get(rb_mBERT, rb_intern("Tuple"));
+
+	rb_require("mochilo");
+	rb_cMochilo = rb_const_get(rb_cObject, rb_intern("Mochilo"));
+	id_unpack_unsafe = rb_intern("unpack_unsafe");
+	id_unpack = rb_intern("unpack");
 
 	rb_cDecode = rb_define_class_under(rb_mBERT, "Decode", rb_cObject);
 	rb_define_singleton_method(rb_cDecode, "decode", rb_bert_decode, 1);
