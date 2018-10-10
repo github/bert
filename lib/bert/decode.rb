@@ -10,17 +10,19 @@ module BERT
     end
 
     def self.decode(string)
-      io = StringIO.new(string)
-      io.set_encoding('binary') if io.respond_to?(:set_encoding)
-      header = io.getbyte
+      header = string.getbyte(0)
+
       case header
       when VERSION_4
         raise "v4 stream cannot be decoded" unless BERT.supports?(:v4)
-        Mochilo.unpack(io.read)
+        Mochilo.unpack(string.byteslice(1, string.bytesize - 1))
       when VERSION_3
         raise "v3 stream cannot be decoded" unless BERT.supports?(:v3)
-        Mochilo.unpack_unsafe(io.read)
+        Mochilo.unpack_unsafe(string.byteslice(1, string.bytesize - 1))
       when MAGIC, VERSION_2
+        io = StringIO.new(string)
+        io.set_encoding('binary') if io.respond_to?(:set_encoding)
+        io.getbyte
         new(io).read_any
       else
         fail("Bad Magic")
