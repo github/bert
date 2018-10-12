@@ -36,6 +36,7 @@ static VALUE rb_cTuple;
 static VALUE rb_cMochilo;
 static VALUE id_unpack_unsafe;
 static VALUE id_unpack;
+static VALUE id_byteslice;
 
 struct bert_buf {
 	const uint8_t *data;
@@ -523,6 +524,7 @@ static VALUE rb_bert_decode(VALUE klass, VALUE rb_string)
 	uint8_t proto_version;
 	const char *str;
 	size_t size;
+	VALUE substr;
 
 	Check_Type(rb_string, T_STRING);
 	str = RSTRING_PTR(rb_string);
@@ -540,13 +542,15 @@ static VALUE rb_bert_decode(VALUE klass, VALUE rb_string)
 	    return bert_read(&buf);
         } else if (proto_version == MOCHILO_VERSION1) {
 		if (supports("v3")) {
-			return rb_funcall(rb_cMochilo, id_unpack_unsafe, 1, rb_str_new(str + 1, size - 1));
+			substr = rb_funcall(rb_string, id_byteslice, 2, INT2NUM(1), INT2NUM(size - 1));
+			return rb_funcall(rb_cMochilo, id_unpack_unsafe, 1, substr);
 		} else {
 			rb_raise(rb_eTypeError, "v3 stream cannot be decoded");
 		}
         } else if (proto_version == MOCHILO_VERSION2) {
 		if (supports("v4")) {
-			return rb_funcall(rb_cMochilo, id_unpack, 1, rb_str_new(str + 1, size - 1));
+			substr = rb_funcall(rb_string, id_byteslice, 2, INT2NUM(1), INT2NUM(size - 1));
+			return rb_funcall(rb_cMochilo, id_unpack, 1, substr);
 		} else {
 			rb_raise(rb_eTypeError, "v4 stream cannot be decoded");
 		}
@@ -569,6 +573,7 @@ void Init_decode()
 	rb_cMochilo = rb_const_get(rb_cObject, rb_intern("Mochilo"));
 	id_unpack_unsafe = rb_intern("unpack_unsafe");
 	id_unpack = rb_intern("unpack");
+	id_byteslice = rb_intern("byteslice");
 
 	rb_cDecode = rb_define_class_under(rb_mBERT, "Decode", rb_cObject);
 	rb_define_singleton_method(rb_cDecode, "decode", rb_bert_decode, 1);
