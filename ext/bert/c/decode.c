@@ -566,7 +566,7 @@ static VALUE rb_bert_impl(VALUE klass)
 
 void Init_decode()
 {
-	rb_mBERT = rb_const_get(rb_cObject, rb_intern("BERT"));
+	rb_mBERT = rb_define_module("BERT");
 	rb_cTuple = rb_const_get(rb_mBERT, rb_intern("Tuple"));
 
 	rb_require("mochilo");
