@@ -31,7 +31,7 @@ module BERT
 
     def initialize(ins)
       @in = ins
-      @peeked = ""
+      @peeked = +""
     end
 
     def read_any
@@ -66,7 +66,7 @@ module BERT
         length = 0
       else
         result = @peeked
-        @peeked = ''
+        @peeked = +''
         length -= result.length
       end
 
